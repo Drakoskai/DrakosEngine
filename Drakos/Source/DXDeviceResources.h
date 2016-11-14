@@ -8,10 +8,7 @@
 class DXDeviceResources
 {
 public:
-	
-
-	DXDeviceResources();
-	DXDeviceResources(const DXDeviceResources& other);
+	DXDeviceResources();	
 	~DXDeviceResources();
 
 	bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
@@ -34,6 +31,7 @@ public:
 	void DisableWireframe() const;
 
 private:
+	DXDeviceResources(const DXDeviceResources& other);
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
