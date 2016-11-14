@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{07c8c907-15d0-4ef1-b731-fb5913ac278d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{1e3957e6-df40-41c1-bbb4-40b1a5426abb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DX">
+      <UniqueIdentifier>{6c02fe9e-6501-4de7-ba2a-240e0c349ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DX">
+      <UniqueIdentifier>{b4f2b963-8034-4eef-aebe-47aad40be9e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DX\shader">
+      <UniqueIdentifier>{4eec4fc9-f4f7-4b7b-992e-ea5c9b644c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DX\shader">
+      <UniqueIdentifier>{77392bd3-2c01-41a0-879f-24063e1061ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DX\ui">
+      <UniqueIdentifier>{5f8832fb-9a61-4f42-9270-f9d80c8d92b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DX\ui">
+      <UniqueIdentifier>{c0fe6af5-ddc3-4397-ac28-fa2e6257cf90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{9444aa7c-5524-460b-9695-930784cac2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DX\input">
+      <UniqueIdentifier>{719af1b7-008b-4e3b-9fce-c2810d4b59bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DX\input">
+      <UniqueIdentifier>{d7b8f04c-4265-4201-b495-5ff8d4a7f6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Collections">
+      <UniqueIdentifier>{26700150-e7bc-4710-ab2d-c7b60ace5231}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Effects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Skydome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TerrainCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fps.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXDeviceResources.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXPipelineState.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Frustum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXHelper.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FontShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ColorShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShaderManager.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LightShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TerrainShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextureShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkydomeShader.h">
+      <Filter>Header Files\DX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font.h">
+      <Filter>Header Files\DX\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UserInterface.h">
+      <Filter>Header Files\DX\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text.h">
+      <Filter>Header Files\DX\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Minimap.h">
+      <Filter>Header Files\DX\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mouse.h">
+      <Filter>Header Files\DX\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InputListener.h">
+      <Filter>Header Files\DX\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InputContext.h">
+      <Filter>Header Files\DX\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Keyboard.h">
+      <Filter>Header Files\DX\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraController.h">
+      <Filter>Header Files\DX\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXMath.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mesh.h">
+      <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadTargaTexture.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Frustum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Skydome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TerrainCell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXPipelineState.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXDeviceResources.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FontShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkydomeShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LightShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TerrainShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextureShader.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text.cpp">
+      <Filter>Source Files\DX\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font.cpp">
+      <Filter>Source Files\DX\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UserInterface.cpp">
+      <Filter>Source Files\DX\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fps.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mouse.cpp">
+      <Filter>Source Files\DX\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShaderManager.cpp">
+      <Filter>Source Files\DX\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CameraController.cpp">
+      <Filter>Source Files\DX\input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXMath.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MiniMap.cpp">
+      <Filter>Source Files\DX\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\InputContext.cpp">
+      <Filter>Source Files\DX\input</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Shaders\color.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\color.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\font.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\font.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\light.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\light.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\skydome.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\skydome.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\terrain.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\terrain.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\texture.ps">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Source\Shaders\texture.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
