@@ -101,8 +101,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	}
 
 	// Get the adapter (video card) description.
-	DXGI_ADAPTER_DESC adapterDesc;
-	ZeroMemory(&adapterDesc, sizeof(DXGI_ADAPTER_DESC));
+	DXGI_ADAPTER_DESC adapterDesc = { };
 
 	result = adapter->GetDesc(&adapterDesc);
 	if (FAILED(result))

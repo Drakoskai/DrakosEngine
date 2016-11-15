@@ -343,7 +343,7 @@ bool Terrain::LoadColorMap() const
 	}
 
 	// Read in the file header.
-	BITMAPFILEHEADER bitmapFileHeader;
+	BITMAPFILEHEADER bitmapFileHeader = {};
 	unsigned long long count = fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
 	if (count != 1)
 	{
@@ -351,7 +351,7 @@ bool Terrain::LoadColorMap() const
 	}
 
 	// Read in the bitmap info header.
-	BITMAPINFOHEADER bitmapInfoHeader;
+	BITMAPINFOHEADER bitmapInfoHeader = {};
 	count = fread(&bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
 	if (count != 1)
 	{
@@ -600,9 +600,6 @@ void Terrain::ShutdownTerrainModel()
 
 void Terrain::CalculateTerrainVectors() const
 {
-	TempVertexType vertex1;
-	TempVertexType vertex2;
-	TempVertexType vertex3;
 	VectorType tangent;
 	VectorType binormal;
 
@@ -615,6 +612,9 @@ void Terrain::CalculateTerrainVectors() const
 	// Go through all the faces and calculate the the tangent, binormal, and normal vectors.
 	for (int i = 0; i < faceCount; i++)
 	{
+		TempVertexType vertex1;
+		TempVertexType vertex2;
+		TempVertexType vertex3;
 		// Get the three vertices for this face from the terrain model.
 		vertex1.x = m_terrainModel[index].x;
 		vertex1.y = m_terrainModel[index].y;
@@ -768,7 +768,6 @@ void Terrain::ShutdownTerrainCells()
 		delete[] m_TerrainCells;
 		m_TerrainCells = nullptr;
 	}
-
 }
 
 bool Terrain::RenderCell(ID3D11DeviceContext* deviceContext, int cellId, Frustum* Frustum)
@@ -780,7 +779,6 @@ bool Terrain::RenderCell(ID3D11DeviceContext* deviceContext, int cellId, Frustum
 	float minHeight;
 	float minDepth;
 	bool result;
-
 
 	// Get the dimensions of the terrain cell.
 	m_TerrainCells[cellId].GetCellDimensions(maxWidth, maxHeight, maxDepth, minWidth, minHeight, minDepth);

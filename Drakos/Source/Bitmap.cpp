@@ -104,8 +104,7 @@ bool Bitmap::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Set up the description of the dynamic vertex buffer.
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC vertexBufferDesc = {};
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
@@ -115,8 +114,7 @@ bool Bitmap::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	ZeroMemory(&vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA vertexData = {};
 
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
@@ -141,8 +139,7 @@ bool Bitmap::InitializeBuffers(ID3D11Device* device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	D3D11_SUBRESOURCE_DATA indexData;
-	ZeroMemory(&indexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA indexData = {};
 
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;
@@ -211,8 +208,7 @@ bool Bitmap::UpdateBuffers(ID3D11DeviceContext* deviceContent, int positionX, in
 	vertices[5].texture = Vector2(1.0f, 1.0f);
 
 	// Lock the vertex buffer.
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	D3D11_MAPPED_SUBRESOURCE mappedResource = {};
 
 	HRESULT result = deviceContent->Map(m_vertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))

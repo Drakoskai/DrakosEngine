@@ -114,8 +114,7 @@ bool TerrainCell::InitializeBuffers(ID3D11Device* device, int nodeIndexX, int no
 	}
 
 	// Set up the description of the static vertex buffer.
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC vertexBufferDesc = {};
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
@@ -125,8 +124,7 @@ bool TerrainCell::InitializeBuffers(ID3D11Device* device, int nodeIndexX, int no
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	ZeroMemory(&vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA vertexData = {};
 
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
@@ -141,8 +139,7 @@ bool TerrainCell::InitializeBuffers(ID3D11Device* device, int nodeIndexX, int no
 		return false;
 	}
 	// Set up the description of the static index buffer.
-	D3D11_BUFFER_DESC indexBufferDesc;
-	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC indexBufferDesc = {};
 
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
@@ -152,7 +149,8 @@ bool TerrainCell::InitializeBuffers(ID3D11Device* device, int nodeIndexX, int no
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	D3D11_SUBRESOURCE_DATA indexData;
+	D3D11_SUBRESOURCE_DATA indexData = {};
+
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
@@ -266,8 +264,7 @@ bool TerrainCell::BuildLineBuffers(ID3D11Device* device)
 	unsigned long*  indices = new unsigned long[indexCount];
 
 	// Set up the description of the vertex buffer.
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC vertexBufferDesc = {};
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(ColorVertexType) * vertexCount;
@@ -277,16 +274,14 @@ bool TerrainCell::BuildLineBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	ZeroMemory(&vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA vertexData = {};
 
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Set up the description of the index buffer.
-	D3D11_BUFFER_DESC indexBufferDesc;
-	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC indexBufferDesc = {};
 
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
@@ -296,8 +291,7 @@ bool TerrainCell::BuildLineBuffers(ID3D11Device* device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	D3D11_SUBRESOURCE_DATA indexData;
-	ZeroMemory(&indexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA indexData = {};
 
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;

@@ -32,7 +32,6 @@ bool SkydomeShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, M
 		return false;
 	}
 
-	// Now render the prepared buffers with the shader.
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(m_layout.Get());
 
@@ -123,7 +122,7 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 	}
 
 	// Setup the description of the dynamic constant buffer that is in the vertex shader.
-	D3D11_BUFFER_DESC matrixBufferDesc;
+	D3D11_BUFFER_DESC matrixBufferDesc = {};
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -139,7 +138,7 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 	}
 
 	// Setup the description of the dynamic pixel constant buffer that is in the pixel shader.
-	D3D11_BUFFER_DESC colorBufferDesc;
+	D3D11_BUFFER_DESC colorBufferDesc = {};
 	colorBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	colorBufferDesc.ByteWidth = sizeof(ColorBufferType);
 	colorBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;

@@ -26,8 +26,7 @@ bool Texture::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContex
 	}
 
 	// Setup the description of the texture.
-	D3D11_TEXTURE2D_DESC textureDesc;
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	D3D11_TEXTURE2D_DESC textureDesc = {};
 
 	textureDesc.Height = height;
 	textureDesc.Width = width;
@@ -53,9 +52,9 @@ bool Texture::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContex
 
 	// Copy the targa image data into the texture.
 	deviceContext->UpdateSubresource(m_texture.Get(), 0, nullptr, m_targaData, rowPitch, 0);
+	
 	// Setup the shader resource view description.
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	ZeroMemory(&srvDesc, sizeof(srvDesc));
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
 	srvDesc.Format = textureDesc.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;

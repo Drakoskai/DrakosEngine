@@ -160,7 +160,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
 	// Create a texture sampler state description.
-	D3D11_SAMPLER_DESC samplerDesc;
+	D3D11_SAMPLER_DESC samplerDesc = {};
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -185,7 +185,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
 	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
-	D3D11_BUFFER_DESC lightBufferDesc;
+	D3D11_BUFFER_DESC lightBufferDesc = {};
 	ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;

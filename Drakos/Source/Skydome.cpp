@@ -143,7 +143,7 @@ bool SkyDomeModel::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Set up the description of the vertex buffer.
-	D3D11_BUFFER_DESC vertexBufferDesc;
+	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -152,7 +152,7 @@ bool SkyDomeModel::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
+	D3D11_SUBRESOURCE_DATA vertexData = {};
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
@@ -167,7 +167,7 @@ bool SkyDomeModel::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Set up the description of the index buffer.
-	D3D11_BUFFER_DESC indexBufferDesc;
+	D3D11_BUFFER_DESC indexBufferDesc = {};
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
