@@ -250,7 +250,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	m_pipeline = new DXPipelineState();
 	// Now set the rasterizer state.
 	m_pipeline->InitAll(m_device.Get());
-	m_deviceContext->RSSetState(m_pipeline->m_rasterState.Get());
+	m_deviceContext->RSSetState(m_pipeline->CullCounterClockWise.Get());
 
 	// Setup the viewport for rendering.
 	D3D11_VIEWPORT viewport;
@@ -365,7 +365,7 @@ void DXDeviceResources::EnableAlphaBlending() const
 	blendFactor[3] = 0.0f;
 
 	// Turn on the alpha blending.
-	m_deviceContext->OMSetBlendState(m_pipeline->mAplhaBlend.Get(), blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_pipeline->AlphaBlend.Get(), blendFactor, 0xffffffff);
 }
 
 void DXDeviceResources::DisableAlphaBlending() const
@@ -379,19 +379,19 @@ void DXDeviceResources::DisableAlphaBlending() const
 	blendFactor[3] = 0.0f;
 
 	// Turn off the alpha blending.
-	m_deviceContext->OMSetBlendState(m_pipeline->m_alphaDisableBlendState.Get(), blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_pipeline->AlphaBlendDisabled.Get(), blendFactor, 0xffffffff);
 }
 
 void DXDeviceResources::TurnOnCulling() const
 {
 	// Set the culling rasterizer state.
-	m_deviceContext->RSSetState(m_pipeline->m_rasterState.Get());
+	m_deviceContext->RSSetState(m_pipeline->CullCounterClockWise.Get());
 }
 
 void DXDeviceResources::TurnOffCulling() const
 {
 	// Set the no back face culling rasterizer state.
-	m_deviceContext->RSSetState(m_pipeline->m_rasterStateNoCulling.Get());
+	m_deviceContext->RSSetState(m_pipeline->NoCull.Get());
 }
 
 void DXDeviceResources::EnableAlphaToCoverageBlending() const
@@ -405,17 +405,17 @@ void DXDeviceResources::EnableAlphaToCoverageBlending() const
 	blendFactor[3] = 0.0f;
 
 	// Turn on the alpha blending.
-	m_deviceContext->OMSetBlendState(m_pipeline->m_alphaCoverageBlendState.Get(), blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_pipeline->NonPremultiplied.Get(), blendFactor, 0xffffffff);
 }
 
 void DXDeviceResources::EnableWireframe() const
 {
 	// Set the wire frame rasterizer state.
-	m_deviceContext->RSSetState(m_pipeline->m_rasterStateWireframe.Get());
+	m_deviceContext->RSSetState(m_pipeline->WireFrame.Get());
 }
 
 void DXDeviceResources::DisableWireframe() const
 {
 	// Set the solid fill rasterizer state.
-	m_deviceContext->RSSetState(m_pipeline->m_rasterState.Get());
+	m_deviceContext->RSSetState(m_pipeline->CullCounterClockWise.Get());
 }

@@ -3,18 +3,18 @@
 #include <windows.h>
 #include "Game.h"
 
-class Program
+class Window
 {
 public:
-	Program();
-	~Program();
+	Window();
+	~Window();
 
 	bool Initialize();
 	void Run() const;
-	static LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+	static LRESULT CALLBACK WinMsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 private:
-	Program(const Program&);
+	Window(const Window&);
 
 	bool Frame() const;
 	void InitWindow(int& screenWidth, int& screenHeight);
@@ -29,4 +29,4 @@ private:
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 static InputContext* ApplicationInputContext = nullptr;
-static Program* ApplicationHandle = nullptr;
+static Window* ApplicationHandle = nullptr;

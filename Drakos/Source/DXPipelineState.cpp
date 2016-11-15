@@ -8,83 +8,15 @@ DXPipelineState::~DXPipelineState() { }
 
 void DXPipelineState::InitAll(ID3D11Device* device)
 {
-	InitRasterState(device);
+	HRESULT result;
 
-	D3D11_RASTERIZER_DESC noCullDesc;
-	ZeroMemory(&noCullDesc, sizeof(D3D11_RASTERIZER_DESC));
+	CreateRasterizerState(device, D3D11_CULL_BACK, D3D11_FILL_SOLID, CullCounterClockWise.GetAddressOf());
+	CreateRasterizerState(device, D3D11_CULL_NONE, D3D11_FILL_SOLID, NoCull.GetAddressOf());
+	CreateRasterizerState(device, D3D11_CULL_NONE, D3D11_FILL_WIREFRAME, WireFrame.GetAddressOf());
 
-	noCullDesc.AntialiasedLineEnable = false;
-	noCullDesc.CullMode = D3D11_CULL_BACK;
-	noCullDesc.DepthBias = 0;
-	noCullDesc.DepthBiasClamp = 0.0f;
-	noCullDesc.DepthClipEnable = true;
-	noCullDesc.FillMode = D3D11_FILL_SOLID;
-	noCullDesc.FrontCounterClockwise = false;
-	noCullDesc.MultisampleEnable = false;
-	noCullDesc.ScissorEnable = false;
-	noCullDesc.SlopeScaledDepthBias = 0.0f;
-	noCullDesc.CullMode = D3D11_CULL_NONE;
-
-	HRESULT result = device->CreateRasterizerState(&noCullDesc, m_rasterStateNoCulling.GetAddressOf());
-	DX::ThrowIfFailed(result);
-
-	// Setup a raster description which enables wire frame rendering.
-	D3D11_RASTERIZER_DESC wireFrameDesc;
-	ZeroMemory(&noCullDesc, sizeof(D3D11_RASTERIZER_DESC));
-
-	wireFrameDesc.AntialiasedLineEnable = false;
-	wireFrameDesc.CullMode = D3D11_CULL_BACK;
-	wireFrameDesc.DepthBias = 0;
-	wireFrameDesc.DepthBiasClamp = 0.0f;
-	wireFrameDesc.DepthClipEnable = true;
-	wireFrameDesc.FillMode = D3D11_FILL_WIREFRAME;
-	wireFrameDesc.FrontCounterClockwise = false;
-	wireFrameDesc.MultisampleEnable = false;
-	wireFrameDesc.ScissorEnable = false;
-	wireFrameDesc.SlopeScaledDepthBias = 0.0f;
-
-	result = device->CreateRasterizerState(&wireFrameDesc, m_rasterStateWireframe.GetAddressOf());
-	DX::ThrowIfFailed(result);
-
-	InitAlphaBlendState(device);
-
-	// create an alpha disabled blend state description.
-	D3D11_BLEND_DESC blendDisabledStateDescription;
-	ZeroMemory(&blendDisabledStateDescription, sizeof(D3D11_BLEND_DESC));
-
-	blendDisabledStateDescription.AlphaToCoverageEnable = FALSE;
-	blendDisabledStateDescription.IndependentBlendEnable = false;
-	blendDisabledStateDescription.RenderTarget[0].BlendEnable = true;
-	blendDisabledStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDisabledStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDisabledStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendDisabledStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	blendDisabledStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendDisabledStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendDisabledStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-	blendDisabledStateDescription.RenderTarget[0].BlendEnable = false;
-	blendDisabledStateDescription.AlphaToCoverageEnable = false;
-
-	result = device->CreateBlendState(&blendDisabledStateDescription, m_alphaDisableBlendState.GetAddressOf());
-	DX::ThrowIfFailed(result);
-
-	// Create a blend state description for the alpha-to-coverage blending mode.
-	D3D11_BLEND_DESC alphaCoverageBlendStateDesc;
-	ZeroMemory(&alphaCoverageBlendStateDesc, sizeof(D3D11_BLEND_DESC));
-
-	alphaCoverageBlendStateDesc.AlphaToCoverageEnable = true;
-	alphaCoverageBlendStateDesc.IndependentBlendEnable = false;
-	alphaCoverageBlendStateDesc.RenderTarget[0].BlendEnable = true;
-	alphaCoverageBlendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	alphaCoverageBlendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	alphaCoverageBlendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	alphaCoverageBlendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	alphaCoverageBlendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	alphaCoverageBlendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	alphaCoverageBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-
-	result = device->CreateBlendState(&alphaCoverageBlendStateDesc, m_alphaCoverageBlendState.GetAddressOf());
-	DX::ThrowIfFailed(result);
+	CreateBlendState(device, D3D11_BLEND_ONE, D3D11_BLEND_ONE, D3D11_BLEND_ONE, D3D11_BLEND_ZERO, 0x0f, AlphaBlend.GetAddressOf());
+	CreateBlendState(device, D3D11_BLEND_ONE, D3D11_BLEND_ONE, D3D11_BLEND_ONE, D3D11_BLEND_ZERO, 0x0f, false, AlphaBlendDisabled.GetAddressOf());
+	CreateBlendState(device, D3D11_BLEND_SRC_ALPHA, D3D11_BLEND_INV_SRC_ALPHA, NonPremultiplied.GetAddressOf());
 
 	// Initialize the description of the stencil state.
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -137,44 +69,96 @@ void DXPipelineState::InitAll(ID3D11Device* device)
 	DX::ThrowIfFailed(result);
 }
 
-void DXPipelineState::InitRasterState(ID3D11Device* device)
+HRESULT DXPipelineState::CreateRasterizerState(ID3D11Device* device,
+	D3D11_CULL_MODE cullMode,
+	D3D11_FILL_MODE fillMode,
+	_Out_ ID3D11RasterizerState** pResult)
 {
-	// Setup the raster description which will determine how and what polygons will be drawn.
-	D3D11_RASTERIZER_DESC rasterDesc;
-	ZeroMemory(&rasterDesc, sizeof(D3D11_RASTERIZER_DESC));
+	D3D11_RASTERIZER_DESC desc = {};
+	desc.CullMode = cullMode;
+	desc.FillMode = fillMode;
+	desc.DepthClipEnable = true;
+	desc.MultisampleEnable = true;
+	HRESULT hr = device->CreateRasterizerState(&desc, pResult);
 
-	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = false;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	DX::ThrowIfFailed(hr);
 
-	HRESULT result = device->CreateRasterizerState(&rasterDesc, m_rasterState.GetAddressOf());
-	DX::ThrowIfFailed(result);
+	return hr;
 }
 
-void DXPipelineState::InitAlphaBlendState(ID3D11Device* device)
+HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
+	D3D11_BLEND srcBlend,
+	D3D11_BLEND srcBlendAlpha,
+	D3D11_BLEND destBlend,
+	D3D11_BLEND DestBlendAlpha,
+	UINT8 writeMask,
+	_Out_ ID3D11BlendState** pResult)
 {
-	// Create an alpha enabled blend state description.
-	D3D11_BLEND_DESC blendStateDescription;
-	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+	D3D11_BLEND_DESC desc = {};
 
-	blendStateDescription.AlphaToCoverageEnable = FALSE;
-	blendStateDescription.IndependentBlendEnable = false;
-	blendStateDescription.RenderTarget[0].BlendEnable = true;
-	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	desc.RenderTarget[0].BlendEnable = (srcBlend != D3D11_BLEND_ONE) || (destBlend != D3D11_BLEND_ZERO);
 
-	HRESULT result = device->CreateBlendState(&blendStateDescription, mAplhaBlend.GetAddressOf());
-	DX::ThrowIfFailed(result);
+	desc.RenderTarget[0].SrcBlend = srcBlend;
+	desc.RenderTarget[0].SrcBlendAlpha = srcBlendAlpha;
+	desc.RenderTarget[0].DestBlend = destBlend;
+	desc.RenderTarget[0].DestBlendAlpha = DestBlendAlpha;
+	desc.RenderTarget[0].BlendOp = desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	desc.RenderTarget[0].RenderTargetWriteMask = writeMask;
+
+	HRESULT hr = device->CreateBlendState(&desc, pResult);
+
+	DX::ThrowIfFailed(hr);
+
+	return hr;
+}
+
+HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
+	D3D11_BLEND srcBlend,
+	D3D11_BLEND srcBlendAlpha,
+	D3D11_BLEND destBlend,
+	D3D11_BLEND DestBlendAlpha,
+	UINT8 writeMask,
+	bool blendEnable,
+	_Out_ ID3D11BlendState** pResult)
+{
+	D3D11_BLEND_DESC desc = {};
+
+	desc.RenderTarget[0].BlendEnable = blendEnable;
+
+	desc.RenderTarget[0].SrcBlend = srcBlend;
+	desc.RenderTarget[0].SrcBlendAlpha = srcBlendAlpha;
+	desc.RenderTarget[0].DestBlend = destBlend;
+	desc.RenderTarget[0].DestBlendAlpha = DestBlendAlpha;
+	desc.RenderTarget[0].BlendOp = desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	desc.RenderTarget[0].RenderTargetWriteMask = writeMask;
+
+	HRESULT hr = device->CreateBlendState(&desc, pResult);
+
+	DX::ThrowIfFailed(hr);
+
+	return hr;
+}
+
+HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
+	D3D11_BLEND srcBlend,
+	D3D11_BLEND destBlend,
+	_Out_ ID3D11BlendState** pResult)
+{
+	D3D11_BLEND_DESC desc = {};
+
+	desc.RenderTarget[0].BlendEnable = (srcBlend != D3D11_BLEND_ONE) || (destBlend != D3D11_BLEND_ZERO);
+
+	desc.RenderTarget[0].SrcBlend = desc.RenderTarget[0].SrcBlendAlpha = srcBlend;
+	desc.RenderTarget[0].DestBlend = desc.RenderTarget[0].DestBlendAlpha = destBlend;
+	desc.RenderTarget[0].BlendOp = desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	HRESULT hr = device->CreateBlendState(&desc, pResult);
+
+	DX::ThrowIfFailed(hr);
+
+	return hr;
 }

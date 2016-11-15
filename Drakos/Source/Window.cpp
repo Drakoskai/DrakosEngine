@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "Program.h"
+#include "Window.h"
 #include "Utility.h"
 
-Program::Program() :
+Window::Window() :
 m_applicationName(nullptr),
 m_hinstance(nullptr),
 m_hwnd(nullptr),
@@ -10,7 +10,7 @@ m_Application(nullptr),
 m_Input(nullptr)
 { }
 
-Program::Program(const Program&) :
+Window::Window(const Window&) :
 m_applicationName(nullptr),
 m_hinstance(nullptr),
 m_hwnd(nullptr),
@@ -18,7 +18,7 @@ m_Application(nullptr),
 m_Input(nullptr)
 { }
 
-Program::~Program()
+Window::~Window()
 {
 	if (m_Application)
 	{
@@ -34,7 +34,7 @@ Program::~Program()
 	ReleaseWindow();
 }
 
-bool Program::Initialize()
+bool Window::Initialize()
 {
 	int screenWidth = 0;
 	int screenHeight = 0;
@@ -61,7 +61,7 @@ bool Program::Initialize()
 	return true;
 }
 
-void Program::Run() const
+void Window::Run() const
 {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -89,7 +89,7 @@ void Program::Run() const
 	}
 }
 
-bool Program::Frame() const
+bool Window::Frame() const
 {
 	if (m_Input->IsEscapePressed() == true)
 	{
@@ -105,7 +105,7 @@ bool Program::Frame() const
 	return true;
 }
 
-LRESULT CALLBACK Program::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK Window::WinMsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	if (ApplicationInputContext)
 	{
@@ -115,12 +115,9 @@ LRESULT CALLBACK Program::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LP
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
-void Program::InitWindow(int& screenWidth, int& screenHeight)
+void Window::InitWindow(int& screenWidth, int& screenHeight)
 {
-
-	WNDCLASS wcex = { 0 };
-	ZeroMemory(&wcex, sizeof(wcex));
-
+	WNDCLASS wcex = { };
 	int posX;
 	int posY;
 
@@ -150,23 +147,23 @@ void Program::InitWindow(int& screenWidth, int& screenHeight)
 
 	if (FULL_SCREEN)
 	{
-		/*DEVMODE dmScreenSettings;
+		DEVMODE dmScreenSettings;
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
+		dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(screenWidth);
+		dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(screenHeight);
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
 		posX = 0;
-		posY = 0;*/
+		posY = 0;
 	}
 	else
 	{
-		screenWidth = 1280;
-		screenHeight = 720;
+		screenWidth = 1920;
+		screenHeight = 1080;
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
@@ -188,14 +185,14 @@ void Program::InitWindow(int& screenWidth, int& screenHeight)
 	ShowCursor(false);
 }
 
-void Program::ReleaseWindow()
+void Window::ReleaseWindow()
 {
 	ShowCursor(true);
 
-	/*if (FULL_SCREEN)
+	if (FULL_SCREEN)
 	{
-	ChangeDisplaySettings(nullptr, 0);
-	}*/
+		ChangeDisplaySettings(nullptr, 0);
+	}
 	DestroyWindow(m_hwnd);
 
 	m_hwnd = nullptr;
@@ -224,7 +221,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
 	default:
 	{
-		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		return ApplicationHandle->WinMsgHandler(hwnd, umessage, wparam, lparam);
 	}
 	}
 }

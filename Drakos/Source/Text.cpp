@@ -65,8 +65,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	}
 
 	// Set up the description of the dynamic vertex buffer.
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC vertexBufferDesc = {};
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
@@ -76,8 +75,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	ZeroMemory(&vertexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA vertexData = {};
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
@@ -92,8 +90,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	}
 
 	// Set up the description of the static index buffer.
-	D3D11_BUFFER_DESC indexBufferDesc;
-	ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC indexBufferDesc = {};
 
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
@@ -103,8 +100,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	D3D11_SUBRESOURCE_DATA indexData;
-	ZeroMemory(&indexData, sizeof(D3D11_SUBRESOURCE_DATA));
+	D3D11_SUBRESOURCE_DATA indexData = {};
 
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;

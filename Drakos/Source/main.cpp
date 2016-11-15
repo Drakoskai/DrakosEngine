@@ -1,13 +1,13 @@
 #include "pch.h"
-#include "Program.h"
+#include "Window.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	Program* program = new Program;
-	if (program->Initialize())
+	Window* window = new Window;
+	if (window->Initialize())
 	{
-		program->Run();
+		window->Run();
 	}
-	delete program;
+	delete window;
 	return 0;
 }
