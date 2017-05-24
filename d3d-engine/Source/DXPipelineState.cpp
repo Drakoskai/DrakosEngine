@@ -2,12 +2,11 @@
 #include "DXPipelineState.h"
 #include "DXHelper.h"
 
-DXPipelineState::DXPipelineState() { }
+DXPipelineState::DXPipelineState() {}
 
-DXPipelineState::~DXPipelineState() { }
+DXPipelineState::~DXPipelineState() {}
 
-void DXPipelineState::InitAll(ID3D11Device* device)
-{
+void DXPipelineState::InitAll(ID3D11Device* device) {
 	HRESULT result;
 
 	CreateRasterizerState(device, D3D11_CULL_BACK, D3D11_FILL_SOLID, CullCounterClockWise.GetAddressOf());
@@ -19,7 +18,7 @@ void DXPipelineState::InitAll(ID3D11Device* device)
 	CreateBlendState(device, D3D11_BLEND_SRC_ALPHA, D3D11_BLEND_INV_SRC_ALPHA, NonPremultiplied.GetAddressOf());
 
 	// Initialize the description of the stencil state.
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 
 	// Set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true;
@@ -46,8 +45,7 @@ void DXPipelineState::InitAll(ID3D11Device* device)
 
 	// Now create a second depth stencil state which turns off the Z buffer for 2D rendering.  The only difference is 
 	// that DepthEnable is set to false, all other parameters are the same as the other depth stencil state.
-	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc = {};
-
+	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
 	depthDisabledStencilDesc.DepthEnable = false;
 	depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
@@ -70,8 +68,7 @@ void DXPipelineState::InitAll(ID3D11Device* device)
 HRESULT DXPipelineState::CreateRasterizerState(ID3D11Device* device,
 	D3D11_CULL_MODE cullMode,
 	D3D11_FILL_MODE fillMode,
-	_Out_ ID3D11RasterizerState** pResult)
-{
+	_Out_ ID3D11RasterizerState** pResult) {
 	D3D11_RASTERIZER_DESC desc = {};
 	desc.CullMode = cullMode;
 	desc.FillMode = fillMode;
@@ -84,14 +81,12 @@ HRESULT DXPipelineState::CreateRasterizerState(ID3D11Device* device,
 	return hr;
 }
 
-HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
-	D3D11_BLEND srcBlend,
+HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,	D3D11_BLEND srcBlend,
 	D3D11_BLEND srcBlendAlpha,
 	D3D11_BLEND destBlend,
 	D3D11_BLEND DestBlendAlpha,
 	UINT8 writeMask,
-	_Out_ ID3D11BlendState** pResult)
-{
+	_Out_ ID3D11BlendState** pResult) {
 	D3D11_BLEND_DESC desc = {};
 
 	desc.RenderTarget[0].BlendEnable = (srcBlend != D3D11_BLEND_ONE) || (destBlend != D3D11_BLEND_ZERO);
@@ -118,8 +113,7 @@ HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
 	D3D11_BLEND DestBlendAlpha,
 	UINT8 writeMask,
 	bool blendEnable,
-	_Out_ ID3D11BlendState** pResult)
-{
+	_Out_ ID3D11BlendState** pResult) {
 	D3D11_BLEND_DESC desc = {};
 
 	desc.RenderTarget[0].BlendEnable = blendEnable;
@@ -142,8 +136,7 @@ HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
 HRESULT DXPipelineState::CreateBlendState(ID3D11Device* device,
 	D3D11_BLEND srcBlend,
 	D3D11_BLEND destBlend,
-	_Out_ ID3D11BlendState** pResult)
-{
+	_Out_ ID3D11BlendState** pResult) {
 	D3D11_BLEND_DESC desc = {};
 
 	desc.RenderTarget[0].BlendEnable = (srcBlend != D3D11_BLEND_ONE) || (destBlend != D3D11_BLEND_ZERO);

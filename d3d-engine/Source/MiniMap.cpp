@@ -5,45 +5,41 @@
 using namespace DirectX;
 
 Minimap::Minimap() :
-m_mapLocationX(0),
-m_mapLocationY(0),
-m_pointLocationX(0),
-m_pointLocationY(0),
-m_mapSizeX(0),
-m_mapSizeY(0),
-m_terrainWidth(0),
-m_terrainHeight(0),
-m_MiniMapBitmap(nullptr),
-m_PointBitmap(nullptr) { }
+	m_mapLocationX(0),
+	m_mapLocationY(0),
+	m_pointLocationX(0),
+	m_pointLocationY(0),
+	m_mapSizeX(0),
+	m_mapSizeY(0),
+	m_terrainWidth(0),
+	m_terrainHeight(0),
+	m_MiniMapBitmap(nullptr),
+	m_PointBitmap(nullptr) {}
 
 Minimap::Minimap(const Minimap&) :
-m_mapLocationX(0),
-m_mapLocationY(0),
-m_pointLocationX(0),
-m_pointLocationY(0),
-m_mapSizeX(0),
-m_mapSizeY(0),
-m_terrainWidth(0),
-m_terrainHeight(0),
-m_MiniMapBitmap(nullptr),
-m_PointBitmap(nullptr) { }
+	m_mapLocationX(0),
+	m_mapLocationY(0),
+	m_pointLocationX(0),
+	m_pointLocationY(0),
+	m_mapSizeX(0),
+	m_mapSizeY(0),
+	m_terrainWidth(0),
+	m_terrainHeight(0),
+	m_MiniMapBitmap(nullptr),
+	m_PointBitmap(nullptr) {}
 
-Minimap::~Minimap()
-{
-	if (m_PointBitmap)
-	{
+Minimap::~Minimap() {
+	if (m_PointBitmap) {
 		delete m_PointBitmap;
 		m_PointBitmap = nullptr;
 	}
-	if (m_MiniMapBitmap)
-	{
+	if (m_MiniMapBitmap) {
 		delete m_MiniMapBitmap;
 		m_MiniMapBitmap = nullptr;
 	}
 }
 
-bool Minimap::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, float terrainWidth, float terrainHeight)
-{
+bool Minimap::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, float terrainWidth, float terrainHeight) {
 	bool result;
 
 	// Set the size of the mini-map  minus the borders.
@@ -51,7 +47,7 @@ bool Minimap::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContex
 	m_mapSizeY = 150.0f;
 
 	// Initialize the location of the mini-map on the screen.
-	m_mapLocationX = screenWidth - static_cast<int>(m_mapSizeX)-10;
+	m_mapLocationX = screenWidth - static_cast<int>(m_mapSizeX) - 10;
 	m_mapLocationY = 10;
 
 	// Store the terrain size.
@@ -60,88 +56,74 @@ bool Minimap::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContex
 
 	// Create the mini-map bitmap object.
 	m_MiniMapBitmap = new Bitmap;
-	if (!m_MiniMapBitmap)
-	{
+	if (!m_MiniMapBitmap) {
 		return false;
 	}
 
 	// Initialize the mini-map bitmap object.
 	result = m_MiniMapBitmap->Initialize(device, deviceContext, screenWidth, screenHeight, 154, 154, "../Data/minimap.tga");
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	// Create the point bitmap object.
 	m_PointBitmap = new Bitmap;
-	if (!m_PointBitmap)
-	{
+	if (!m_PointBitmap) {
 		return false;
 	}
 
 	// Initialize the point bitmap object.
 	result = m_PointBitmap->Initialize(device, deviceContext, screenWidth, screenHeight, 3, 3, "../Data/point.tga");
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	return true;
 }
 
-bool Minimap::Render(ID3D11DeviceContext* deviceContext, ShaderManager* shaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix) const
-{
+bool Minimap::Render(ID3D11DeviceContext* deviceContext, ShaderManager* shaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix) const {
 	// Put the mini-map bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	bool result = m_MiniMapBitmap->Render(deviceContext, m_mapLocationX, m_mapLocationY);
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	// Render the mini-map bitmap using the texture shader.
 	result = shaderManager->RenderTextureShader(deviceContext, m_MiniMapBitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_MiniMapBitmap->GetTexture());
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	// Put the point bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	result = m_PointBitmap->Render(deviceContext, m_pointLocationX, m_pointLocationY);
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	// Render the point bitmap using the texture shader.
 	result = shaderManager->RenderTextureShader(deviceContext, m_PointBitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_PointBitmap->GetTexture());
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
 	return true;
 }
 
-void Minimap::PositionUpdate(float positionX, float positionZ)
-{
+void Minimap::PositionUpdate(float positionX, float positionZ) {
 	// Ensure the point does not leave the minimap borders even if the camera goes past the terrain borders.
-	if (positionX < 0)
-	{
+	if (positionX < 0) {
 		positionX = 0;
 	}
 
-	if (positionZ < 0)
-	{
+	if (positionZ < 0) {
 		positionZ = 0;
 	}
 
-	if (positionX > m_terrainWidth)
-	{
+	if (positionX > m_terrainWidth) {
 		positionX = m_terrainWidth;
 	}
 
-	if (positionZ > m_terrainHeight)
-	{
+	if (positionZ > m_terrainHeight) {
 		positionZ = m_terrainHeight;
 	}
 

@@ -20,7 +20,7 @@ TextureShader::~TextureShader() { }
 
 bool TextureShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
-	return InitializeShader(device, hwnd, L"../Drakos/Source/Shaders/texture.vs", L"../Drakos/Source/Shaders/texture.ps");
+	return InitializeShader(device, hwnd, L"../d3d-engine/Source/Shaders/texture.vs", L"../d3d-engine/Source/Shaders/texture.ps");
 }
 
 bool TextureShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ID3D11ShaderResourceView* texture) const

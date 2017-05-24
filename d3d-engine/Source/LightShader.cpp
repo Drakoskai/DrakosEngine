@@ -3,32 +3,29 @@
 #include "DXHelper.h"
 
 LightShader::LightShader() :
-m_vertexShader(nullptr),
-m_pixelShader(nullptr),
-m_layout(nullptr),
-m_matrixBuffer(nullptr),
-m_sampleState(nullptr),
-m_lightBuffer(nullptr) { }
+	m_vertexShader(nullptr),
+	m_pixelShader(nullptr),
+	m_layout(nullptr),
+	m_matrixBuffer(nullptr),
+	m_sampleState(nullptr),
+	m_lightBuffer(nullptr) {}
 
 LightShader::LightShader(const LightShader&) :
-m_vertexShader(nullptr),
-m_pixelShader(nullptr),
-m_layout(nullptr),
-m_matrixBuffer(nullptr),
-m_sampleState(nullptr),
-m_lightBuffer(nullptr) { }
+	m_vertexShader(nullptr),
+	m_pixelShader(nullptr),
+	m_layout(nullptr),
+	m_matrixBuffer(nullptr),
+	m_sampleState(nullptr),
+	m_lightBuffer(nullptr) {}
 
-LightShader::~LightShader() { }
+LightShader::~LightShader() {}
 
-bool LightShader::Initialize(ID3D11Device* device, HWND hwnd)
-{
-	return InitializeShader(device, hwnd, L"../Drakos/Source/Shaders/light.vs", L"../Drakos/Source/Shaders/light.ps");
+bool LightShader::Initialize(ID3D11Device* device, HWND hwnd) {
+	return InitializeShader(device, hwnd, L"../d3d-engine/Source/Shaders/light.vs", L"../d3d-engine/Source/Shaders/light.ps");
 }
 
-bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projMatrix, ID3D11ShaderResourceView* texture, Vector3 lightDirection, Color diffuseColor) const
-{
-	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projMatrix, texture, lightDirection, diffuseColor))
-	{
+bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projMatrix, ID3D11ShaderResourceView* texture, Vector3 lightDirection, Color diffuseColor) const {
+	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projMatrix, texture, lightDirection, diffuseColor)) {
 		return false;
 	}
 
@@ -48,8 +45,7 @@ bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Mat
 	return true;
 }
 
-bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
-{
+bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename) {
 	// Initialize the pointers this function will use to null.
 	Microsoft::WRL::ComPtr<ID3D10Blob> errorMessage = nullptr;
 	Microsoft::WRL::ComPtr<ID3D10Blob> vertexShaderBuffer = nullptr;
@@ -57,16 +53,13 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Compile the vertex shader code.
 	HRESULT result = D3DCompileFromFile(vsFilename, nullptr, nullptr, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
+		if (errorMessage) {
 			DX::OutputShaderErrorMessage(errorMessage.Get(), hwnd, vsFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
+		else {
 			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
 		}
 
@@ -75,16 +68,13 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Compile the pixel shader code.
 	result = D3DCompileFromFile(psFilename, nullptr, nullptr, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
+		if (errorMessage) {
 			DX::OutputShaderErrorMessage(errorMessage.Get(), hwnd, vsFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
+		else {
 			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
 		}
 
@@ -93,15 +83,13 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Create the vertex shader from the buffer.
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, m_vertexShader.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	// Create the pixel shader from the buffer.
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, m_pixelShader.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -136,8 +124,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Create the vertex input layout.
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_layout.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -154,8 +141,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	result = device->CreateBuffer(&matrixBufferDesc, nullptr, m_matrixBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -179,8 +165,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Create the texture sampler state.
 	result = device->CreateSamplerState(&samplerDesc, m_sampleState.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -197,16 +182,14 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	result = device->CreateBuffer(&lightBufferDesc, nullptr, m_lightBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	return true;
 }
 
-bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projMatrix, ID3D11ShaderResourceView* texture, Vector3 lightDirection, Color diffuseColor) const
-{
+bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projMatrix, ID3D11ShaderResourceView* texture, Vector3 lightDirection, Color diffuseColor) const {
 	// Transpose the matrices to prepare them for the shader.
 	worldMatrix.Transpose();
 	viewMatrix.Transpose();
@@ -220,8 +203,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix
 	ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	HRESULT result = deviceContext->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 	// Get a pointer to the data in the constant buffer.
@@ -246,8 +228,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix
 
 	// Lock the light constant buffer so it can be written to.
 	result = deviceContext->Map(m_lightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 	// Get a pointer to the data in the light constant buffer.

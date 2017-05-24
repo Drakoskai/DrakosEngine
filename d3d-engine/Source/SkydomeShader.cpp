@@ -3,32 +3,29 @@
 #include "DXHelper.h"
 
 SkydomeShader::SkydomeShader() :
-m_vertexShader(nullptr),
-m_pixelShader(nullptr),
-m_layout(nullptr),
-m_matrixBuffer(nullptr),
-m_colorBuffer(nullptr) { }
+	m_vertexShader(nullptr),
+	m_pixelShader(nullptr),
+	m_layout(nullptr),
+	m_matrixBuffer(nullptr),
+	m_colorBuffer(nullptr) {}
 
 SkydomeShader::SkydomeShader(const SkydomeShader&) :
-m_vertexShader(nullptr),
-m_pixelShader(nullptr),
-m_layout(nullptr),
-m_matrixBuffer(nullptr),
-m_colorBuffer(nullptr) { }
+	m_vertexShader(nullptr),
+	m_pixelShader(nullptr),
+	m_layout(nullptr),
+	m_matrixBuffer(nullptr),
+	m_colorBuffer(nullptr) {}
 
-SkydomeShader::~SkydomeShader() { }
+SkydomeShader::~SkydomeShader() {}
 
-bool SkydomeShader::Initialize(ID3D11Device* device, HWND hwnd)
-{
-	return InitializeShader(device, hwnd, L"../Drakos/Source/Shaders/skydome.vs", L"../Drakos/Source/Shaders/skydome.ps");
+bool SkydomeShader::Initialize(ID3D11Device* device, HWND hwnd) {
+	return InitializeShader(device, hwnd, L"../d3d-engine/Source/Shaders/skydome.vs", L"../d3d-engine/Source/Shaders/skydome.ps");
 }
 
-bool SkydomeShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, Color apexColor, Color centerColor) const
-{
+bool SkydomeShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, Color apexColor, Color centerColor) const {
 	// Set the shader parameters that it will use for rendering.
 	bool result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, apexColor, centerColor);
-	if (!result)
-	{
+	if (!result) {
 		return false;
 	}
 
@@ -45,24 +42,20 @@ bool SkydomeShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, M
 	return true;
 }
 
-bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
-{
+bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename) {
 	Microsoft::WRL::ComPtr<ID3D10Blob> errorMessage = nullptr;
 	Microsoft::WRL::ComPtr<ID3D10Blob> vertexShaderBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D10Blob> pixelShaderBuffer = nullptr;
 
 	// Compile the vertex shader code.
 	HRESULT result = D3DCompileFromFile(vsFilename, nullptr, nullptr, "SkyDomeVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, vertexShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
+		if (errorMessage) {
 			DX::OutputShaderErrorMessage(errorMessage.Get(), hwnd, vsFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
+		else {
 			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
 		}
 
@@ -71,16 +64,13 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 
 	// Compile the pixel shader code.
 	result = D3DCompileFromFile(psFilename, nullptr, nullptr, "SkyDomePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, pixelShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
+		if (errorMessage) {
 			DX::OutputShaderErrorMessage(errorMessage.Get(), hwnd, psFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the file itself.
-		else
-		{
+		else {
 			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
 		}
 
@@ -89,15 +79,13 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 
 	// Create the vertex shader from the buffer.
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, m_vertexShader.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	// Create the pixel shader from the buffer.
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, m_pixelShader.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -116,8 +104,7 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 
 	// Create the vertex input layout.
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), m_layout.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -132,8 +119,7 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	result = device->CreateBuffer(&matrixBufferDesc, nullptr, m_matrixBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -148,16 +134,14 @@ bool SkydomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 
 	// Create the pixel constant buffer pointer so we can access the pixel shader constant buffer from within this class.
 	result = device->CreateBuffer(&colorBufferDesc, nullptr, m_colorBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	return true;
 }
 
-bool SkydomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, Color apexColor, Color centerColor) const
-{
+bool SkydomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, Color apexColor, Color centerColor) const {
 	// Transpose the matrices to prepare them for the shader.
 	/*worldMatrix.Transpose();
 	viewMatrix.Transpose();
@@ -169,8 +153,7 @@ bool SkydomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matr
 	// Lock the matrix constant buffer so it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	HRESULT result = deviceContext->Map(m_matrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -193,8 +176,7 @@ bool SkydomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, Matr
 
 	// Lock the color constant buffer so it can be written to.
 	result = deviceContext->Map(m_colorBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 

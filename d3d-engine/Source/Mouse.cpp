@@ -2,10 +2,8 @@
 #include "Mouse.h"
 #include "Utility.h"
 
-Mouse::Mouse(): x(0), y(0) { }
+Mouse::Mouse() : x(0), y(0) {}
 
-Mouse::~Mouse() { }
+Mouse::~Mouse() {}
 
-void Mouse::Read()
-{
-}
+void Mouse::Read() {}

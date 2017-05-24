@@ -3,33 +3,32 @@
 #include "Utility.h"
 
 Text::Text() :
-m_vertexBuffer(nullptr),
-m_indexBuffer(nullptr),
-m_shadowVertexBuffer(nullptr),
-m_shadowIndexBuffer(nullptr),
-m_screenWidth(0),
-m_screenHeight(0),
-m_maxLength(0),
-m_vertexCount(0),
-m_indexCount(0),
-m_shadow(false) { }
+	m_vertexBuffer(nullptr),
+	m_indexBuffer(nullptr),
+	m_shadowVertexBuffer(nullptr),
+	m_shadowIndexBuffer(nullptr),
+	m_screenWidth(0),
+	m_screenHeight(0),
+	m_maxLength(0),
+	m_vertexCount(0),
+	m_indexCount(0),
+	m_shadow(false) {}
 
 Text::Text(const Text&) :
-m_vertexBuffer(nullptr),
-m_indexBuffer(nullptr),
-m_shadowVertexBuffer(nullptr),
-m_shadowIndexBuffer(nullptr),
-m_screenWidth(0),
-m_screenHeight(0),
-m_maxLength(0),
-m_vertexCount(0),
-m_indexCount(0),
-m_shadow(false) { }
+	m_vertexBuffer(nullptr),
+	m_indexBuffer(nullptr),
+	m_shadowVertexBuffer(nullptr),
+	m_shadowIndexBuffer(nullptr),
+	m_screenWidth(0),
+	m_screenHeight(0),
+	m_maxLength(0),
+	m_vertexCount(0),
+	m_indexCount(0),
+	m_shadow(false) {}
 
-Text::~Text() { }
+Text::~Text() {}
 
-bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, int maxLength, bool shadow, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue)
-{
+bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, int maxLength, bool shadow, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue) {
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 	m_maxLength = maxLength;
@@ -38,13 +37,11 @@ bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 	return InitializeSentence(device, deviceContext, Font, text, positionX, positionY, red, green, blue);
 }
 
-void Text::Render(ID3D11DeviceContext* deviceContext, ShaderManager* shaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix, ID3D11ShaderResourceView* fontTexture) const
-{
+void Text::Render(ID3D11DeviceContext* deviceContext, ShaderManager* shaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix, ID3D11ShaderResourceView* fontTexture) const {
 	RenderSentence(deviceContext, shaderManager, worldMatrix, viewMatrix, orthoMatrix, fontTexture);
 }
 
-bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceContext, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue)
-{
+bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceContext, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue) {
 	// Set the vertex and index count.
 	m_vertexCount = 6 * m_maxLength;
 	m_indexCount = 6 * m_maxLength;
@@ -59,8 +56,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	memset(vertices, 0, sizeof(VertexType) * m_vertexCount);
 
 	// Initialize the index array.
-	for (int i = 0; i < m_indexCount; i++)
-	{
+	for (int i = 0; i < m_indexCount; i++) {
 		indices[i] = i;
 	}
 
@@ -82,8 +78,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 
 	// Create the vertex buffer.
 	HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexData, m_vertexBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		delete[] vertices;
 		delete[] indices;
 		return false;
@@ -108,27 +103,23 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 
 	// Create the index buffer.
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, m_indexBuffer.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		delete[] vertices;
 		delete[] indices;
 		return false;
 	}
 
 	// If shadowed create the second vertex and index buffer.
-	if (m_shadow)
-	{
+	if (m_shadow) {
 		result = device->CreateBuffer(&vertexBufferDesc, &vertexData, m_shadowVertexBuffer.GetAddressOf());
-		if (FAILED(result))
-		{
+		if (FAILED(result)) {
 			delete[] vertices;
 			delete[] indices;
 			return false;
 		}
 
 		result = device->CreateBuffer(&indexBufferDesc, &indexData, m_shadowIndexBuffer.GetAddressOf());
-		if (FAILED(result))
-		{
+		if (FAILED(result)) {
 			delete[] vertices;
 			delete[] indices;
 			return false;
@@ -143,8 +134,7 @@ bool Text::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	return UpdateSentence(deviceContext, Font, text, positionX, positionY, red, green, blue);
 }
 
-bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue)
-{
+bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, char* text, int positionX, int positionY, float red, float green, float blue) {
 	// Store the color of the sentence.
 	m_pixelColor = Color(red, green, blue, 1.0f);
 
@@ -152,8 +142,7 @@ bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, 
 	int numLetters = static_cast<int>(strlen(text));
 
 	// Check for possible buffer overflow.
-	if (numLetters > m_maxLength)
-	{
+	if (numLetters > m_maxLength) {
 		return false;
 	}
 
@@ -171,8 +160,7 @@ bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, 
 	// Lock the vertex buffer.
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	HRESULT result = deviceContext->Map(m_vertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		delete[] vertices;
 		return false;
 	}
@@ -188,8 +176,7 @@ bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, 
 	deviceContext->Unmap(m_vertexBuffer.Get(), 0);
 
 	// If shadowed then do the same for the second vertex buffer but offset by two pixels on both axis.
-	if (m_shadow)
-	{
+	if (m_shadow) {
 		memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
 
 		drawX = static_cast<float>((((m_screenWidth / 2) * -1) + positionX) + 2);
@@ -197,8 +184,7 @@ bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, 
 		Font->BuildVertexArray(static_cast<void*>(vertices), text, drawX, drawY);
 
 		result = deviceContext->Map(m_shadowVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-		if (FAILED(result))
-		{
+		if (FAILED(result)) {
 			delete[] vertices;
 			return false;
 		}
@@ -213,16 +199,14 @@ bool Text::UpdateSentence(ID3D11DeviceContext* deviceContext, SimpleFont* Font, 
 	return true;
 }
 
-void Text::RenderSentence(ID3D11DeviceContext* deviceContext, ShaderManager* ShaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix, ID3D11ShaderResourceView* fontTexture) const
-{
+void Text::RenderSentence(ID3D11DeviceContext* deviceContext, ShaderManager* ShaderManager, Matrix worldMatrix, Matrix viewMatrix, Matrix orthoMatrix, ID3D11ShaderResourceView* fontTexture) const {
 	// Set vertex buffer stride and offset.
 	Color shadowColor;
 	unsigned int stride = sizeof(VertexType);
 	unsigned int offset = 0;
 
 	// If shadowed then render the shadow text first.
-	if (m_shadow)
-	{
+	if (m_shadow) {
 		shadowColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 		deviceContext->IASetVertexBuffers(0, 1, m_shadowVertexBuffer.GetAddressOf(), &stride, &offset);
 		deviceContext->IASetIndexBuffer(m_shadowIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

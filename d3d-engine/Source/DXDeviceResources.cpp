@@ -6,70 +6,62 @@ using namespace DirectX;
 using Microsoft::WRL::ComPtr;
 
 DXDeviceResources::DXDeviceResources() :
-m_vsync_enabled(false),
-m_videoCardMemory(0),
-m_swapChain(nullptr),
-m_device(nullptr),
-m_deviceContext(nullptr),
-m_renderTargetView(nullptr),
-m_depthStencilBuffer(nullptr),
-m_depthStencilView(nullptr),
-m_pipeline(nullptr) { }
+	m_vsync_enabled(false),
+	m_videoCardMemory(0),
+	m_swapChain(nullptr),
+	m_device(nullptr),
+	m_deviceContext(nullptr),
+	m_renderTargetView(nullptr),
+	m_depthStencilBuffer(nullptr),
+	m_depthStencilView(nullptr),
+	m_pipeline(nullptr) {}
 
 DXDeviceResources::DXDeviceResources(const DXDeviceResources&) :
-m_vsync_enabled(false),
-m_videoCardMemory(0),
-m_swapChain(nullptr),
-m_device(nullptr),
-m_deviceContext(nullptr),
-m_renderTargetView(nullptr),
-m_depthStencilBuffer(nullptr),
-m_depthStencilView(nullptr),
-m_pipeline(nullptr) { }
+	m_vsync_enabled(false),
+	m_videoCardMemory(0),
+	m_swapChain(nullptr),
+	m_device(nullptr),
+	m_deviceContext(nullptr),
+	m_renderTargetView(nullptr),
+	m_depthStencilBuffer(nullptr),
+	m_depthStencilView(nullptr),
+	m_pipeline(nullptr) {}
 
-DXDeviceResources::~DXDeviceResources()
-{
-	if (m_swapChain)
-	{
+DXDeviceResources::~DXDeviceResources() {
+	if (m_swapChain) {
 		m_swapChain->SetFullscreenState(false, nullptr);
 	}
-	if (m_pipeline)
-	{
+	if (m_pipeline) {
 		delete m_pipeline;
 		m_pipeline = nullptr;
 	}
 }
 
-bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
-{
+bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear) {
 	m_vsync_enabled = vsync;
 
 	ComPtr<IDXGIFactory> factory;
 	HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), reinterpret_cast<void**>(factory.GetAddressOf()));
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 	ComPtr<IDXGIAdapter> adapter;
 	// Use the factory to create an adapter for the primary graphics interface (video card).
 	result = factory->EnumAdapters(0, adapter.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 	ComPtr<IDXGIOutput> adapterOutput;
 	// Enumerate the primary adapter output (monitor).
 	result = adapter->EnumOutputs(0, adapterOutput.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
 	unsigned int numModes(0);
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, nullptr);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -79,8 +71,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	displayModeList = new DXGI_MODE_DESC[numModes];
 	// fill the display mode list
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -88,12 +79,9 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
 	unsigned int numerator = 0;
 	unsigned int denominator = 0;
-	for (unsigned int i = 0; i < numModes; i++)
-	{
-		if (displayModeList[i].Width == static_cast<unsigned int>(screenWidth))
-		{
-			if (displayModeList[i].Height == static_cast<unsigned int>(screenHeight))
-			{
+	for (unsigned int i = 0; i < numModes; i++) {
+		if (displayModeList[i].Width == static_cast<unsigned int>(screenWidth)) {
+			if (displayModeList[i].Height == static_cast<unsigned int>(screenHeight)) {
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
 			}
@@ -104,8 +92,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	DXGI_ADAPTER_DESC adapterDesc = { };
 
 	result = adapter->GetDesc(&adapterDesc);
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -115,8 +102,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	// Convert the name of the video card to a character array and store it.
 	unsigned long long stringLength;
 	int error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
-	if (error != 0)
-	{
+	if (error != 0) {
 		return false;
 	}
 
@@ -138,13 +124,10 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	// Set the refresh rate of the back buffer.
-	if (m_vsync_enabled)
-	{
+	if (m_vsync_enabled) {
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
-	}
-	else
-	{
+	} else {
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	}
@@ -160,12 +143,9 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
-	if (fullscreen)
-	{
+	if (fullscreen) {
 		swapChainDesc.Windowed = false;
-	}
-	else
-	{
+	} else {
 		swapChainDesc.Windowed = true;
 	}
 
@@ -184,22 +164,19 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
 	result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, m_swapChain.GetAddressOf(), m_device.GetAddressOf(), nullptr, m_deviceContext.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 	ID3D11Texture2D* backBufferPtr = nullptr;
 	// Get the pointer to the back buffer.
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&backBufferPtr));
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
 	// Create the render target view with the back buffer pointer.
 	result = m_device->CreateRenderTargetView(backBufferPtr, nullptr, m_renderTargetView.GetAddressOf());
-	if (FAILED(result))
-	{
+	if (FAILED(result)) {
 		return false;
 	}
 
@@ -225,8 +202,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	if (FAILED(m_device->CreateTexture2D(&depthBufferDesc, nullptr, m_depthStencilBuffer.GetAddressOf())))
-	{
+	if (FAILED(m_device->CreateTexture2D(&depthBufferDesc, nullptr, m_depthStencilBuffer.GetAddressOf()))) {
 		return false;
 	}
 
@@ -239,8 +215,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 	// Create the depth stencil view.
-	if (FAILED(m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), &depthStencilViewDesc, m_depthStencilView.GetAddressOf())))
-	{
+	if (FAILED(m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), &depthStencilViewDesc, m_depthStencilView.GetAddressOf()))) {
 		return false;
 	}
 
@@ -281,8 +256,7 @@ bool DXDeviceResources::Initialize(int screenWidth, int screenHeight, bool vsync
 	return true;
 }
 
-void DXDeviceResources::BeginScene(float red, float green, float blue, float alpha) const
-{
+void DXDeviceResources::BeginScene(float red, float green, float blue, float alpha) const {
 	float color[4];
 	// Setup the color to clear the buffer to.
 	color[0] = red;
@@ -297,64 +271,51 @@ void DXDeviceResources::BeginScene(float red, float green, float blue, float alp
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void DXDeviceResources::EndScene() const
-{
+void DXDeviceResources::EndScene() const {
 	// Present the back buffer to the screen since rendering is complete.
-	if (m_vsync_enabled)
-	{
+	if (m_vsync_enabled) {
 		// Lock to screen refresh rate.
 		m_swapChain->Present(1, 0);
-	}
-	else
-	{
+	} else {
 		// Present as fast as possible.
 		m_swapChain->Present(0, 0);
 	}
 }
 
-ID3D11Device* DXDeviceResources::GetDevice() const
-{
+ID3D11Device* DXDeviceResources::GetDevice() const {
 	return m_device.Get();
 }
 
-ID3D11DeviceContext* DXDeviceResources::GetDeviceContext() const
-{
+ID3D11DeviceContext* DXDeviceResources::GetDeviceContext() const {
 	return m_deviceContext.Get();
 }
 
-void DXDeviceResources::GetProjMatrix(Matrix& projMatrix) const
-{
+void DXDeviceResources::GetProjMatrix(Matrix& projMatrix) const {
 	projMatrix = m_projectionMatrix;
 }
 
-void DXDeviceResources::GetWorldMatrix(Matrix& worldMatrix) const
-{
+void DXDeviceResources::GetWorldMatrix(Matrix& worldMatrix) const {
 	worldMatrix = m_worldMatrix;
 }
 
-void DXDeviceResources::GetOrthoMatrix(Matrix& orthoMatrix) const
-{
+void DXDeviceResources::GetOrthoMatrix(Matrix& orthoMatrix) const {
 	orthoMatrix = m_orthoMatrix;
 }
 
-void DXDeviceResources::GetVideoCardInfo(char* cardName, int& memory) const
-{
+void DXDeviceResources::GetVideoCardInfo(char* cardName, int& memory) const {
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
 }
 
-void DXDeviceResources::TurnZBufferOn() const
-{
+void DXDeviceResources::TurnZBufferOn() const {
 	m_deviceContext->OMSetDepthStencilState(m_pipeline->m_depthStencilState.Get(), 1);
 }
 
-void DXDeviceResources::TurnZBufferOff() const
-{
+void DXDeviceResources::TurnZBufferOff() const {
 	m_deviceContext->OMSetDepthStencilState(m_pipeline->m_depthDisabledStencilState.Get(), 1);
 }
 
-void DXDeviceResources::EnableAlphaBlending() const
-{
+void DXDeviceResources::EnableAlphaBlending() const {
 	float blendFactor[4];
 
 	// Setup the blend factor.
@@ -367,8 +328,7 @@ void DXDeviceResources::EnableAlphaBlending() const
 	m_deviceContext->OMSetBlendState(m_pipeline->AlphaBlend.Get(), blendFactor, 0xffffffff);
 }
 
-void DXDeviceResources::DisableAlphaBlending() const
-{
+void DXDeviceResources::DisableAlphaBlending() const {
 	float blendFactor[4];
 
 	// Setup the blend factor.
@@ -381,20 +341,17 @@ void DXDeviceResources::DisableAlphaBlending() const
 	m_deviceContext->OMSetBlendState(m_pipeline->AlphaBlendDisabled.Get(), blendFactor, 0xffffffff);
 }
 
-void DXDeviceResources::TurnOnCulling() const
-{
+void DXDeviceResources::TurnOnCulling() const {
 	// Set the culling rasterizer state.
 	m_deviceContext->RSSetState(m_pipeline->CullCounterClockWise.Get());
 }
 
-void DXDeviceResources::TurnOffCulling() const
-{
+void DXDeviceResources::TurnOffCulling() const {
 	// Set the no back face culling rasterizer state.
 	m_deviceContext->RSSetState(m_pipeline->NoCull.Get());
 }
 
-void DXDeviceResources::EnableAlphaToCoverageBlending() const
-{
+void DXDeviceResources::EnableAlphaToCoverageBlending() const {
 	float blendFactor[4];
 
 	// Setup the blend factor.
@@ -407,14 +364,12 @@ void DXDeviceResources::EnableAlphaToCoverageBlending() const
 	m_deviceContext->OMSetBlendState(m_pipeline->NonPremultiplied.Get(), blendFactor, 0xffffffff);
 }
 
-void DXDeviceResources::EnableWireframe() const
-{
+void DXDeviceResources::EnableWireframe() const {
 	// Set the wire frame rasterizer state.
 	m_deviceContext->RSSetState(m_pipeline->WireFrame.Get());
 }
 
-void DXDeviceResources::DisableWireframe() const
-{
+void DXDeviceResources::DisableWireframe() const {
 	// Set the solid fill rasterizer state.
 	m_deviceContext->RSSetState(m_pipeline->CullCounterClockWise.Get());
 }
